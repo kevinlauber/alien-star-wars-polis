@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,21 +13,21 @@ const mockFactions: AlienFaction[] = [
     id: '1',
     name: 'Verdanites',
     description: 'Green-skinned aliens who specialize in terraforming and biological technology.',
-    imageUrl: '/alien-green.png',
+    imageUrl: '/lovable-uploads/62697cfa-48f3-458f-bb9c-8eb30cad0129.png', // Image from your upload - this will show the full image, you may need to crop/position appropriately
     relationship: 'friendly'
   },
   {
     id: '2',
     name: 'Pyraxians',
     description: 'Orange-skinned aliens with horns who have mastered fire and defensive technologies.',
-    imageUrl: '/alien-orange.png',
+    imageUrl: '/lovable-uploads/62697cfa-48f3-458f-bb9c-8eb30cad0129.png', // Image from your upload
     relationship: 'neutral'
   },
   {
     id: '3',
     name: 'Aquarians',
     description: 'Blue-skinned aliens who control water and have advanced offensive capabilities.',
-    imageUrl: '/alien-blue.png',
+    imageUrl: '/lovable-uploads/62697cfa-48f3-458f-bb9c-8eb30cad0129.png', // Image from your upload
     relationship: 'hostile'
   }
 ];
@@ -67,6 +67,48 @@ const mockResources = {
 const AlienPage = () => {
   const navigate = useNavigate();
   const [selectedFaction, setSelectedFaction] = useState<AlienFaction>(mockFactions[0]);
+  const [alienAnimationState, setAlienAnimationState] = useState(0);
+  
+  // Simple animation effect for aliens
+  useEffect(() => {
+    const animationInterval = setInterval(() => {
+      setAlienAnimationState(prev => (prev + 1) % 60);
+    }, 50);
+    
+    return () => clearInterval(animationInterval);
+  }, []);
+  
+  // Get alien position based on faction id and animation state
+  const getAlienImageStyle = (factionId: string) => {
+    // The image contains all three aliens, we need to position it to show just one
+    // We'll use object-position to focus on different parts of the image
+    
+    let xPosition = '50%';
+    // Left alien (green) = 33%, Center alien (orange) = 50%, Right alien (blue) = 67%
+    if (factionId === '1') xPosition = '29%';
+    if (factionId === '2') xPosition = '50%';
+    if (factionId === '3') xPosition = '71%';
+    
+    // Add some subtle animation
+    const translateY = Math.sin(alienAnimationState / 10) * 3; // Small up/down movement
+    
+    return {
+      objectPosition: `${xPosition} 40%`, // Focus on the alien's face
+      objectFit: 'cover' as 'cover',
+      transform: `translateY(${translateY}px)`,
+      transition: 'transform 0.3s ease-in-out'
+    };
+  };
+  
+  // Get tooltip style based on relationship
+  const getRelationshipStyle = (relationship: string) => {
+    switch (relationship) {
+      case 'friendly': return 'bg-green-100 text-green-800 border-green-300';
+      case 'neutral': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case 'hostile': return 'bg-red-100 text-red-800 border-red-300';
+      default: return '';
+    }
+  };
   
   return (
     <div className="min-h-screen flex flex-col bg-game-background">
@@ -98,14 +140,19 @@ const AlienPage = () => {
                 </CardHeader>
                 <CardContent className="p-3 pt-0">
                   <div className="flex items-center">
-                    <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center mr-3">
-                      {faction.relationship === 'friendly' && '😊'}
-                      {faction.relationship === 'neutral' && '😐'}
-                      {faction.relationship === 'hostile' && '😡'}
+                    <div className="w-12 h-12 rounded-full bg-gray-300 overflow-hidden mr-3">
+                      <img 
+                        src={faction.imageUrl} 
+                        alt={faction.name}
+                        className="w-full h-full"
+                        style={getAlienImageStyle(faction.id)}
+                      />
                     </div>
                     <div className="text-sm">
-                      <p className="capitalize">{faction.relationship}</p>
-                      <p className="text-xs text-muted-foreground">Daily tribute: 10 favor</p>
+                      <div className={`capitalize px-2 py-0.5 rounded-full text-xs inline-block border ${getRelationshipStyle(faction.relationship)}`}>
+                        {faction.relationship}
+                      </div>
+                      <p className="text-xs text-[#4a3e1b] mt-1">Daily tribute: 10 favor</p>
                     </div>
                   </div>
                 </CardContent>
@@ -117,9 +164,29 @@ const AlienPage = () => {
         <div className="flex-1 p-4 bg-[#1e293b] bg-opacity-50">
           <div className="h-full overflow-auto">
             <div className="medieval-panel">
-              <div className="p-4">
+              <div className="p-4 relative">
+                <div className="absolute top-0 right-0 w-40 h-40 overflow-hidden opacity-20 pointer-events-none">
+                  <img 
+                    src={selectedFaction.imageUrl}
+                    alt={`${selectedFaction.name} background`}
+                    className="w-full h-full"
+                    style={getAlienImageStyle(selectedFaction.id)}
+                  />
+                </div>
+                
                 <h2 className="text-2xl font-semibold text-[#4a3e1b] mb-2">{selectedFaction.name}</h2>
-                <p className="text-[#4a3e1b] mb-4">{selectedFaction.description}</p>
+                
+                <div className="flex items-center mb-4">
+                  <div className="w-24 h-24 rounded-lg overflow-hidden mr-4 border-2 border-[#c8b372] shadow-lg">
+                    <img 
+                      src={selectedFaction.imageUrl}
+                      alt={selectedFaction.name}
+                      className="w-full h-full"
+                      style={getAlienImageStyle(selectedFaction.id)}
+                    />
+                  </div>
+                  <p className="text-[#4a3e1b]">{selectedFaction.description}</p>
+                </div>
                 
                 <div className="space-y-4">
                   <div className="space-y-2">

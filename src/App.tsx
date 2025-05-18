@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import CityView from "./pages/CityView";
 import AlienPage from "./pages/AlienPage";
 import WorldMapPage from "./pages/WorldMapPage";
+import LocalMapPage from "./pages/LocalMapPage";
 import NotFound from "./pages/NotFound";
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
             <Route path="/city" element={<CityView />} />
             <Route path="/alien" element={<AlienPage />} />
             <Route path="/map" element={<WorldMapPage />} />
+            <Route path="/local-map" element={<LocalMapPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

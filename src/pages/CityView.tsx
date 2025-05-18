@@ -134,12 +134,15 @@ const CityView = () => {
         </Button>
         <Button 
           className="medieval-button"
+          onClick={() => navigate('/local-map')}
+        >
+          Local Map
+        </Button>
+        <Button 
+          className="medieval-button"
           onClick={() => navigate('/map')}
         >
           World Map
-        </Button>
-        <Button className="medieval-button">
-          Build New
         </Button>
         <Button className="medieval-button">
           Alliance

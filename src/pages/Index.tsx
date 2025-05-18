@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -39,9 +38,19 @@ const Index = () => {
   const t = translations[language];
 
   return (
-    <div className="min-h-screen flex flex-col starpolis-bg">
+    <div className="min-h-screen flex flex-col">
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+        style={{ 
+          backgroundImage: "url('/lovable-uploads/62697cfa-48f3-458f-bb9c-8eb30cad0129.png')",
+          backgroundSize: "cover"
+        }}
+      ></div>
+      
+      <div className="absolute inset-0 bg-black bg-opacity-30 z-10"></div>
+      
       {/* Language switcher */}
-      <div className="absolute top-4 right-4 flex space-x-2">
+      <div className="absolute top-4 right-4 flex space-x-2 z-20">
         <button 
           className={`px-2 py-1 rounded ${language === 'es' ? 'bg-game-primary text-white' : 'bg-gray-700 text-gray-300'}`}
           onClick={() => setLanguage("es")}
@@ -56,8 +65,8 @@ const Index = () => {
         </button>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center">
-        {/* Logo and aliens image */}
+      <div className="flex-1 flex flex-col items-center justify-center relative z-20">
+        {/* Logo (we'll keep it for additional branding on top of the background) */}
         <div className="w-full max-w-lg mb-6">
           <img 
             src="/starpolis-logo.png" 
@@ -185,7 +194,7 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="py-2 text-center text-sm text-gray-400">
+      <div className="py-2 text-center text-sm text-white relative z-20">
         Starpolis v1.0.0
       </div>
     </div>
