@@ -1,80 +1,144 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { mockIslands, mockCity } from "../data/mockData";
-import ResourceBar from "../components/ResourceBar";
-import WorldMap from "../components/WorldMap";
-import IslandModal from "../components/IslandModal";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { Island } from "../types/game";
-import { toast } from "@/hooks/use-toast";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import ResourceBar from '@/components/ResourceBar';
+import MedievalWorldMap from '@/components/MedievalWorldMap';
+import { Island } from '@/types/game';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
+const mockIslands: Island[] = [
+  {
+    id: '1',
+    position: { x: 150, y: 150 },
+    isOwn: true,
+    isDestroyed: false,
+    health: 100
+  },
+  {
+    id: '2',
+    position: { x: 300, y: 200 },
+    ownerName: 'Enemy1',
+    isOwn: false,
+    isDestroyed: false,
+    health: 85
+  },
+  {
+    id: '3',
+    position: { x: 450, y: 300 },
+    isOwn: false,
+    isDestroyed: false,
+    health: 100
+  },
+  {
+    id: '4',
+    position: { x: 180, y: 350 },
+    isOwn: false,
+    isDestroyed: true,
+    health: 0
+  },
+  {
+    id: '5',
+    position: { x: 400, y: 120 },
+    ownerName: 'Enemy2',
+    isOwn: false,
+    isDestroyed: false,
+    health: 65
+  }
+];
+
+const mockResources = {
+  gold: 5000,
+  favor: 15,
+  maxFavor: 20,
+  diamonds: 10
+};
 
 const WorldMapPage = () => {
   const navigate = useNavigate();
   const [selectedIsland, setSelectedIsland] = useState<Island | null>(null);
-  const [isIslandModalOpen, setIsIslandModalOpen] = useState(false);
-  
-  const handleIslandSelect = (island: Island) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleIslandClick = (island: Island) => {
     setSelectedIsland(island);
-    setIsIslandModalOpen(true);
+    setIsDialogOpen(true);
   };
 
-  const handleAttack = () => {
-    if (!selectedIsland) return;
-    
-    // In a real app, this would call an API
-    toast({
-      title: "Attack Initiated",
-      description: `You're attacking ${selectedIsland.ownerName}'s island!`,
-    });
-    
-    setIsIslandModalOpen(false);
-  };
-
-  const handleColonize = () => {
-    if (!selectedIsland) return;
-    
-    // In a real app, this would call an API
-    toast({
-      title: "Colonization Started",
-      description: "You've started colonizing a new island!",
-    });
-    
-    setIsIslandModalOpen(false);
-  };
-  
   return (
-    <div className="h-full flex flex-col starpolis-bg">
-      <div className="flex items-center p-2 border-b border-game-muted">
+    <div className="min-h-screen flex flex-col bg-game-background">
+      <ResourceBar resources={mockResources} />
+      
+      <div className="flex items-center justify-between px-4 py-2 medieval-header">
         <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => navigate('/')}
-          className="mr-2"
+          variant="outline" 
+          className="text-white border-white"
+          onClick={() => navigate('/city')}
         >
-          <ArrowLeft className="h-5 w-5" />
+          Return to City
         </Button>
-        <h1 className="text-xl font-bold flex-1 text-center">World Map</h1>
-        <div className="w-5"></div> {/* Placeholder for alignment */}
+        <h1 className="text-xl font-bold text-center">World Map</h1>
+        <Button variant="outline" className="text-white border-white">
+          Filter
+        </Button>
       </div>
       
-      <ResourceBar resources={mockCity.resources} />
-      
-      <div className="flex-1 overflow-hidden">
-        <WorldMap 
-          islands={mockIslands} 
-          onIslandSelect={handleIslandSelect}
+      <div className="flex-1 relative">
+        <MedievalWorldMap 
+          islands={mockIslands}
+          onIslandClick={handleIslandClick}
         />
       </div>
-      
-      <IslandModal
-        isOpen={isIslandModalOpen}
-        onClose={() => setIsIslandModalOpen(false)}
-        island={selectedIsland}
-        onAttack={handleAttack}
-        onColonize={handleColonize}
-      />
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="medieval-panel">
+          <DialogHeader>
+            <DialogTitle className="text-center text-[#4a3e1b]">
+              {selectedIsland?.isOwn ? 'Your Island' : selectedIsland?.ownerName ? `${selectedIsland.ownerName}'s Island` : 'Empty Island'}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <DialogDescription className="text-[#4a3e1b]">
+            {selectedIsland?.isDestroyed ? (
+              <p>This island has been destroyed and is uninhabitable.</p>
+            ) : selectedIsland?.isOwn ? (
+              <div>
+                <p>Health: {selectedIsland.health}%</p>
+                <p>This is your island. You have established a settlement here.</p>
+                <div className="mt-4 flex justify-center">
+                  <Button 
+                    className="medieval-button"
+                    onClick={() => {
+                      setIsDialogOpen(false);
+                      navigate('/city');
+                    }}
+                  >
+                    Visit City
+                  </Button>
+                </div>
+              </div>
+            ) : selectedIsland?.ownerName ? (
+              <div>
+                <p>Occupied by: {selectedIsland.ownerName}</p>
+                <p>Health: {selectedIsland.health}%</p>
+                <div className="mt-4 flex justify-center">
+                  <Button className="medieval-button">
+                    Attack Island
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <p>This island is unoccupied and available for colonization.</p>
+                <div className="mt-4 flex justify-center">
+                  <Button className="medieval-button">
+                    Colonize Island
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogDescription>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

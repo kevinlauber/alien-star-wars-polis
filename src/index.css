@@ -61,8 +61,12 @@
   .starpolis-bg {
     background-color: #1A1F2C;
     background-image: 
+      url('/starpolis-logo.png'),
       radial-gradient(circle at 25% 10%, rgba(21, 153, 255, 0.1) 0%, transparent 20%),
       radial-gradient(circle at 75% 75%, rgba(155, 135, 245, 0.1) 0%, transparent 20%);
+    background-repeat: no-repeat;
+    background-position: center 15%, center, center;
+    background-size: 100% auto, cover, cover;
   }
 
   /* Custom styling for buildings */
@@ -101,5 +105,45 @@
 
   .island-destroyed {
     @apply border-gray-800 bg-gray-950 opacity-50;
+  }
+
+  /* Medieval UI Elements */
+  .medieval-button {
+    @apply relative px-4 py-2 bg-gradient-to-b from-[#f8e9af] to-[#d0b978] border-2 border-[#a18c4c] 
+    text-[#4a3e1b] font-medium rounded-sm hover:from-[#f8ebc1] hover:to-[#d8c48c] 
+    focus:outline-none focus:ring-2 focus:ring-[#a18c4c] active:from-[#d0b978] active:to-[#d0b978];
+  }
+
+  .medieval-panel {
+    @apply bg-gradient-to-b from-[#f3e9c6] to-[#e6d9a3] border-2 border-[#c8b372] rounded-md p-4 shadow-md;
+  }
+
+  .medieval-input {
+    @apply bg-[#fffbea] border-2 border-[#c8b372] rounded-sm px-3 py-2 text-[#4a3e1b]
+    focus:outline-none focus:ring-2 focus:ring-[#d0b978] focus:border-[#a18c4c];
+  }
+
+  .medieval-header {
+    @apply bg-gradient-to-r from-[#2a4a7f] to-[#1d6eb7] text-white border-b-2 border-[#1a3057] p-2;
+  }
+
+  /* Building aesthetics */
+  .building-medieval {
+    background-color: #e6d9a3;
+    background-image: url("data:image/svg+xml,%3Csvg width='32' height='64' viewBox='0 0 32 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 28h20V16h-4v8H4V4h28v28h-4V8H8v12h4v-8h12v20H0v-4zm12 8h20v4H16v24H0V36h12v4zm16 12h-4v12h8v-8h-4v-4z' fill='%23c8b372' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
+    @apply border-2 border-[#c8b372] rounded-md shadow-md;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s infinite ease-in-out;
   }
 }

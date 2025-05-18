@@ -1,57 +1,192 @@
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const Index = () => {
   const navigate = useNavigate();
+  const [language, setLanguage] = useState<"es" | "en">("es");
+  const [activeTab, setActiveTab] = useState("login");
+
+  const translations = {
+    es: {
+      newPlayer: "Nuevo Jugador",
+      login: "Iniciar Sesión",
+      register: "Registro",
+      username: "Nombre",
+      email: "E-mail",
+      password: "Contraseña",
+      forgotPassword: "¿Has olvidado la contraseña?",
+      startPlaying: "Comenzar a Jugar",
+      loginButton: "Iniciar Sesión"
+    },
+    en: {
+      newPlayer: "New Player",
+      login: "Login",
+      register: "Register",
+      username: "Username",
+      email: "E-mail",
+      password: "Password",
+      forgotPassword: "Forgot your password?",
+      startPlaying: "Start Playing",
+      loginButton: "Login"
+    }
+  };
+
+  const t = translations[language];
 
   return (
     <div className="min-h-screen flex flex-col starpolis-bg">
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center px-4">
-          <h1 className="text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-game-primary to-game-secondary">
-            STARPOLIS
-          </h1>
-          
-          <div className="relative mb-8">
-            <div className="absolute inset-0 flex items-center justify-center">
-              {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  className="text-game-favor animate-float" 
-                  style={{ animationDelay: `${i * 0.5}s` }}
-                />
-              ))}
+      {/* Language switcher */}
+      <div className="absolute top-4 right-4 flex space-x-2">
+        <button 
+          className={`px-2 py-1 rounded ${language === 'es' ? 'bg-game-primary text-white' : 'bg-gray-700 text-gray-300'}`}
+          onClick={() => setLanguage("es")}
+        >
+          ES
+        </button>
+        <button 
+          className={`px-2 py-1 rounded ${language === 'en' ? 'bg-game-primary text-white' : 'bg-gray-700 text-gray-300'}`}
+          onClick={() => setLanguage("en")}
+        >
+          EN
+        </button>
+      </div>
+
+      <div className="flex-1 flex flex-col items-center justify-center">
+        {/* Logo and aliens image */}
+        <div className="w-full max-w-lg mb-6">
+          <img 
+            src="/starpolis-logo.png" 
+            alt="Starpolis" 
+            className="w-full" 
+          />
+        </div>
+        
+        {/* Login/Register container */}
+        <div className="w-full max-w-md mx-auto">
+          <div className="bg-[#f3e9c6] border-4 border-[#c8b372] rounded-lg overflow-hidden shadow-lg">
+            <div className="bg-[#2a4a7f] text-center py-1">
+              <div className="mx-auto w-12 h-12 flex items-center justify-center bg-[#1a3057] rounded-full border-2 border-[#c8b372] -mt-6 mb-1">
+                <span className="text-white text-xl font-bold">S</span>
+              </div>
             </div>
-            <p className="text-xl text-game-foreground relative z-10 py-8">
-              Build your cosmic civilization across the galaxy
-            </p>
-          </div>
-          
-          <div className="space-y-4">
-            <Button
-              className="bg-game-primary hover:bg-blue-600 w-64 py-6 text-lg"
-              onClick={() => navigate('/city')}
-            >
-              Start Playing
-            </Button>
             
-            <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto">
-              <Button variant="outline" className="border-game-muted">
-                How to Play
-              </Button>
-              <Button variant="outline" className="border-game-muted">
-                Settings
-              </Button>
-            </div>
-          </div>
-          
-          <div className="mt-12 text-sm text-game-muted">
-            <p>A strategy game where you build, expand, and defend</p>
-            <p>your civilization in an alien archipelago.</p>
+            <Tabs 
+              value={activeTab} 
+              onValueChange={setActiveTab} 
+              className="px-4 py-4"
+            >
+              <TabsList className="grid w-full grid-cols-2 bg-[#1a3057]">
+                <TabsTrigger value="login" className="text-white data-[state=active]:bg-[#1d6eb7]">
+                  {t.login}
+                </TabsTrigger>
+                <TabsTrigger value="register" className="text-white data-[state=active]:bg-[#1d6eb7]">
+                  {t.register}
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="login" className="space-y-4 mt-4">
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Input 
+                      id="username" 
+                      placeholder={t.username}
+                      className="bg-[#fffbea] border-[#c8b372] pl-8"
+                    />
+                    <div className="absolute left-2 top-2.5 text-gray-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Input 
+                      id="password" 
+                      type="password" 
+                      placeholder={t.password}
+                      className="bg-[#fffbea] border-[#c8b372] pl-8"
+                    />
+                    <div className="absolute left-2 top-2.5 text-gray-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                  </div>
+                  
+                  <div className="text-xs text-center">
+                    <a href="#" className="text-[#1d6eb7] hover:underline">
+                      {t.forgotPassword}
+                    </a>
+                  </div>
+                </div>
+                
+                <Button 
+                  className="w-full bg-[#1d6eb7] hover:bg-[#165999] text-white border-2 border-[#165999]"
+                  onClick={() => navigate('/city')}
+                >
+                  {t.loginButton}
+                </Button>
+              </TabsContent>
+              
+              <TabsContent value="register" className="space-y-4 mt-4">
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Input 
+                      id="reg-username" 
+                      placeholder={t.username}
+                      className="bg-[#fffbea] border-[#c8b372] pl-8"
+                    />
+                    <div className="absolute left-2 top-2.5 text-gray-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Input 
+                      id="reg-email" 
+                      type="email" 
+                      placeholder={t.email}
+                      className="bg-[#fffbea] border-[#c8b372] pl-8"
+                    />
+                    <div className="absolute left-2 top-2.5 text-gray-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="relative">
+                    <Input 
+                      id="reg-password" 
+                      type="password" 
+                      placeholder={t.password}
+                      className="bg-[#fffbea] border-[#c8b372] pl-8"
+                    />
+                    <div className="absolute left-2 top-2.5 text-gray-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <Button 
+                  className="w-full bg-[#1d6eb7] hover:bg-[#165999] text-white border-2 border-[#165999]"
+                  onClick={() => navigate('/city')}
+                >
+                  {t.startPlaying}
+                </Button>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
+      </div>
+
+      <div className="py-2 text-center text-sm text-gray-400">
+        Starpolis v1.0.0
       </div>
     </div>
   );
