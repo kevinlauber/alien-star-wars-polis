@@ -153,6 +153,16 @@
     }
   }
 
+  /* New wave animation for flags */
+  @keyframes wave {
+    0%, 100% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(8deg);
+    }
+  }
+
   /* Animation classes */
   .animate-float {
     animation: float 3s infinite ease-in-out;
