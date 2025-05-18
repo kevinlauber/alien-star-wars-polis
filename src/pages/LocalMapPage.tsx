@@ -1,16 +1,8 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import ResourceBar from '@/components/ResourceBar';
-import { map } from 'lucide-react';
-
-const mockResources = {
-  gold: 5000,
-  favor: 15,
-  maxFavor: 20,
-  diamonds: 10
-};
+import { Map } from 'lucide-react';
 
 // Types for our local map
 interface LocalObject {
@@ -66,6 +58,13 @@ const mockMapObjects: LocalObject[] = [
     conquered: false
   }
 ];
+
+const mockResources = {
+  gold: 5000,
+  favor: 15,
+  maxFavor: 20,
+  diamonds: 10
+};
 
 const LocalMapPage = () => {
   const navigate = useNavigate();
