@@ -50,13 +50,15 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Background with proper sizing */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
         style={{ 
           backgroundImage: "url('/lovable-uploads/62697cfa-48f3-458f-bb9c-8eb30cad0129.png')",
-          backgroundSize: "contain",
+          backgroundSize: "cover",
           backgroundPosition: "center 30%",
-          backgroundColor: "#0a1f35"
+          backgroundColor: "#0a1f35",
+          opacity: 0.85
         }}
       ></div>
       
@@ -81,28 +83,24 @@ const Index = () => {
       <div className="flex-1 flex flex-col items-center justify-center relative z-20">
         {/* Logo with better visibility */}
         <div className="w-full max-w-lg mb-6 relative">
-          <div className="bg-black bg-opacity-50 rounded-lg p-2 mx-auto w-fit">
+          <div className="mx-auto w-fit">
             <img 
               src="/starpolis-logo.png" 
               alt="Starpolis" 
-              className="w-64 h-auto"
+              className="w-64 h-auto filter drop-shadow-lg"
             />
           </div>
         </div>
         
-        {/* Login/Register container */}
-        <div className="w-full max-w-md mx-auto">
+        {/* Login/Register container with medieval style */}
+        <div className="w-full max-w-md mx-auto px-4 sm:px-0">
           <div className="bg-[#f3e9c6] border-4 border-[#c8b372] rounded-lg overflow-hidden shadow-lg">
-            <div className="bg-[#2a4a7f] text-center py-3">
-              <div className="mx-auto w-14 h-14 flex items-center justify-center bg-[#1a3057] rounded-full border-2 border-[#c8b372] -mt-6 mb-1">
-                <span className="text-white text-2xl font-bold">S</span>
-              </div>
-            </div>
+            {/* Removed the blue header with S */}
             
             <Tabs 
               value={activeTab} 
               onValueChange={setActiveTab} 
-              className="px-4 py-4"
+              className="px-4 py-6"
             >
               <TabsList className="grid w-full grid-cols-2 bg-[#1a3057]">
                 <TabsTrigger value="login" className="text-white data-[state=active]:bg-[#1d6eb7]">

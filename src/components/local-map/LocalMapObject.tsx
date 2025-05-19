@@ -18,6 +18,32 @@ interface LocalMapObjectProps {
 }
 
 const LocalMapObject: React.FC<LocalMapObjectProps> = ({ object, onClick }) => {
+  // Define building styles based on type
+  const getBuildingStyle = () => {
+    const baseStyle = {
+      backgroundImage: `url("/lovable-uploads/${getBuildingBackground(object.type)}")`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      borderRadius: '4px',
+      boxShadow: object.conquered ? '0 0 8px #3498db' : '0 2px 4px rgba(0,0,0,0.3)',
+      transform: 'translateZ(0)',
+    };
+    
+    return baseStyle;
+  };
+  
+  const getBuildingBackground = (type: LocalObject['type']) => {
+    switch (type) {
+      case 'forest': return 'forest-2d.png';
+      case 'mine': return 'mine-2d.png';
+      case 'farm': return 'farm-2d.png';
+      case 'monster': return 'monster-2d.png';
+      case 'village': return 'village-2d.png';
+      case 'ruins': return 'ruins-2d.png';
+      default: return 'default-2d.png';
+    }
+  };
+
   const getTypeIcon = (type: LocalObject['type']) => {
     switch (type) {
       case 'forest': return '🌳';
@@ -35,13 +61,26 @@ const LocalMapObject: React.FC<LocalMapObjectProps> = ({ object, onClick }) => {
     return "discovered";
   };
 
+  // Use a more medieval 2D style shadow
+  const getShadowStyle = () => {
+    return {
+      width: '80%',
+      height: '15%',
+      backgroundColor: 'rgba(0,0,0,0.4)',
+      borderRadius: '50%',
+      filter: 'blur(2px)',
+      transform: 'translateY(20px)',
+      transition: 'all 0.3s ease',
+    };
+  };
+
   return (
     <div
       key={object.id}
       className={`absolute ${getObjectClass(object)}`}
       style={{
-        width: '50px',
-        height: '50px',
+        width: '60px',
+        height: '60px',
         left: `${object.position.x}px`,
         top: `${object.position.y}px`,
         transform: 'translate(-50%, -50%)',
@@ -51,59 +90,37 @@ const LocalMapObject: React.FC<LocalMapObjectProps> = ({ object, onClick }) => {
       }}
       onClick={() => onClick(object)}
     >
-      {/* Object shadow (projected shadow) */}
+      {/* Object shadow */}
       <div 
-        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/4 w-4/5 h-1/5 bg-black opacity-30 rounded-full blur-sm"
-        style={{ animationDelay: `${parseInt(object.id) * 0.2}s` }}
-      ></div>
+        className="absolute bottom-0 left-1/2 transform -translate-x-1/2"
+        style={getShadowStyle()}
+      />
       
-      {/* Object base with 2D styling */}
+      {/* Object base with 2D medieval styling */}
       <div 
-        className={`absolute inset-0 flex items-center justify-center rounded-lg transform hover:scale-105 transition-all`}
-        style={{
-          backgroundColor: object.conquered ? '#1a446b' : '#6b4a1a',
-          borderWidth: '2px',
-          borderStyle: 'solid',
-          borderColor: object.conquered ? '#3498db' : '#c8b372',
-          borderTopWidth: '1px',
-          borderBottomWidth: '3px', // False 3D effect
-          boxShadow: object.discovered ? 
-            `0 3px 0 ${object.conquered ? '#163b5d' : '#5a3d14'}, inset 0 1px 0 rgba(255,255,255,0.2)` : 
-            'none',
-        }}
+        className={`absolute inset-0 flex items-center justify-center hover:scale-105 transition-all`}
+        style={getBuildingStyle()}
       >
-        {/* Object icon with subtle floating effect */}
-        <div 
-          className="text-xl"
-          style={{ 
-            animation: object.discovered ? 'float 3s infinite ease-in-out' : 'none',
-            animationDelay: `${parseInt(object.id) * 0.5}s`,
-            filter: object.conquered ? 'drop-shadow(0 0 3px rgba(52, 152, 219, 0.7))' : 'none'
-          }}
-        >
+        {/* Object icon as a fallback */}
+        <div className="text-xl absolute bottom-0 right-0 bg-black bg-opacity-40 rounded-tl-md p-0.5">
           {getTypeIcon(object.type)}
         </div>
         
-        {/* Highlight effect for interaction */}
-        <div 
-          className="absolute inset-0 rounded-lg opacity-0 hover:opacity-30 transition-opacity duration-300"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%)'
-          }}
-        ></div>
-        
-        {/* Futuristic glow for conquered objects */}
+        {/* Conquering effect for conquered objects */}
         {object.conquered && (
-          <div className="absolute inset-0 rounded-lg opacity-20" style={{
-            boxShadow: '0 0 8px 2px #3498db',
-            animation: 'pulse-glow 2s infinite ease-in-out'
-          }}></div>
+          <div className="absolute inset-0 rounded-lg" 
+            style={{
+              background: 'linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(52, 152, 219, 0.3))',
+              border: '1px solid rgba(52, 152, 219, 0.5)',
+              animation: 'pulse-glow 2s infinite ease-in-out'
+            }}
+          />
         )}
       </div>
       
       {/* Object label */}
       <div 
-        className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 px-2 py-0.5 text-xs font-semibold text-white bg-black bg-opacity-50 rounded-sm whitespace-nowrap"
+        className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 px-2 py-0.5 text-xs font-semibold text-white bg-black bg-opacity-70 rounded-sm whitespace-nowrap"
         style={{
           opacity: object.discovered ? 1 : 0,
           transition: 'opacity 0.3s ease'
