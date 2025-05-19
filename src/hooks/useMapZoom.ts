@@ -13,6 +13,7 @@ interface UseMapZoomReturn {
   fogOpacity: number;
   handleZoomIn: () => void;
   handleZoomOut: () => void;
+  resetZoom: () => void;
 }
 
 export const useMapZoom = ({
@@ -22,22 +23,38 @@ export const useMapZoom = ({
   scaleStep = 0.2
 }: UseMapZoomProps = {}): UseMapZoomReturn => {
   const [mapScale, setMapScale] = useState(initialScale);
-  const [fogOpacity, setFogOpacity] = useState(0.7);
+  const [fogOpacity, setFogOpacity] = useState(0.6);
 
   const handleZoomIn = () => {
-    setMapScale(prev => Math.min(prev + scaleStep, maxScale));
-    setFogOpacity(prev => Math.max(prev - 0.1, 0.2));
+    setMapScale(prev => {
+      const newScale = Math.min(prev + scaleStep, maxScale);
+      // Calculate fog density based on zoom level
+      const fogReduction = (newScale - minScale) / (maxScale - minScale);
+      setFogOpacity(Math.max(0.7 - fogReduction * 0.5, 0.2));
+      return newScale;
+    });
   };
 
   const handleZoomOut = () => {
-    setMapScale(prev => Math.max(prev - scaleStep, minScale));
-    setFogOpacity(prev => Math.min(prev + 0.1, 0.8));
+    setMapScale(prev => {
+      const newScale = Math.max(prev - scaleStep, minScale);
+      // Calculate fog density based on zoom level
+      const fogReduction = (newScale - minScale) / (maxScale - minScale);
+      setFogOpacity(Math.max(0.7 - fogReduction * 0.5, 0.2));
+      return newScale;
+    });
+  };
+
+  const resetZoom = () => {
+    setMapScale(initialScale);
+    setFogOpacity(0.6);
   };
 
   return {
     mapScale,
     fogOpacity,
     handleZoomIn,
-    handleZoomOut
+    handleZoomOut,
+    resetZoom
   };
 };

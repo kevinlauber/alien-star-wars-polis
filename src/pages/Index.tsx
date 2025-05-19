@@ -1,14 +1,15 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 const Index = () => {
   const navigate = useNavigate();
   const [language, setLanguage] = useState<"es" | "en">("es");
   const [activeTab, setActiveTab] = useState("login");
+  const [currentTranslations, setCurrentTranslations] = useState<Record<string, string>>({});
 
   const translations = {
     es: {
@@ -20,7 +21,8 @@ const Index = () => {
       password: "Contraseña",
       forgotPassword: "¿Has olvidado la contraseña?",
       startPlaying: "Comenzar a Jugar",
-      loginButton: "Iniciar Sesión"
+      loginButton: "Iniciar Sesión",
+      version: "Versión"
     },
     en: {
       newPlayer: "New Player",
@@ -31,11 +33,20 @@ const Index = () => {
       password: "Password",
       forgotPassword: "Forgot your password?",
       startPlaying: "Start Playing",
-      loginButton: "Login"
+      loginButton: "Login",
+      version: "Version"
     }
   };
 
-  const t = translations[language];
+  // Update translations whenever language changes
+  useEffect(() => {
+    setCurrentTranslations(translations[language]);
+  }, [language]);
+
+  // Handle language change
+  const changeLanguage = (newLang: "es" | "en") => {
+    setLanguage(newLang);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -43,44 +54,48 @@ const Index = () => {
         className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
         style={{ 
           backgroundImage: "url('/lovable-uploads/62697cfa-48f3-458f-bb9c-8eb30cad0129.png')",
-          backgroundSize: "cover"
+          backgroundSize: "contain",
+          backgroundPosition: "center 30%",
+          backgroundColor: "#0a1f35"
         }}
       ></div>
       
-      <div className="absolute inset-0 bg-black bg-opacity-30 z-10"></div>
+      <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
       
       {/* Language switcher */}
       <div className="absolute top-4 right-4 flex space-x-2 z-20">
         <button 
-          className={`px-2 py-1 rounded ${language === 'es' ? 'bg-game-primary text-white' : 'bg-gray-700 text-gray-300'}`}
-          onClick={() => setLanguage("es")}
+          className={`px-3 py-1.5 rounded ${language === 'es' ? 'bg-[#1d6eb7] text-white font-bold border-2 border-[#3498db]' : 'bg-gray-700 text-gray-300'}`}
+          onClick={() => changeLanguage("es")}
         >
           ES
         </button>
         <button 
-          className={`px-2 py-1 rounded ${language === 'en' ? 'bg-game-primary text-white' : 'bg-gray-700 text-gray-300'}`}
-          onClick={() => setLanguage("en")}
+          className={`px-3 py-1.5 rounded ${language === 'en' ? 'bg-[#1d6eb7] text-white font-bold border-2 border-[#3498db]' : 'bg-gray-700 text-gray-300'}`}
+          onClick={() => changeLanguage("en")}
         >
           EN
         </button>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center relative z-20">
-        {/* Logo (we'll keep it for additional branding on top of the background) */}
-        <div className="w-full max-w-lg mb-6">
-          <img 
-            src="/starpolis-logo.png" 
-            alt="Starpolis" 
-            className="w-full" 
-          />
+        {/* Logo with better visibility */}
+        <div className="w-full max-w-lg mb-6 relative">
+          <div className="bg-black bg-opacity-50 rounded-lg p-2 mx-auto w-fit">
+            <img 
+              src="/starpolis-logo.png" 
+              alt="Starpolis" 
+              className="w-64 h-auto"
+            />
+          </div>
         </div>
         
         {/* Login/Register container */}
         <div className="w-full max-w-md mx-auto">
           <div className="bg-[#f3e9c6] border-4 border-[#c8b372] rounded-lg overflow-hidden shadow-lg">
-            <div className="bg-[#2a4a7f] text-center py-1">
-              <div className="mx-auto w-12 h-12 flex items-center justify-center bg-[#1a3057] rounded-full border-2 border-[#c8b372] -mt-6 mb-1">
-                <span className="text-white text-xl font-bold">S</span>
+            <div className="bg-[#2a4a7f] text-center py-3">
+              <div className="mx-auto w-14 h-14 flex items-center justify-center bg-[#1a3057] rounded-full border-2 border-[#c8b372] -mt-6 mb-1">
+                <span className="text-white text-2xl font-bold">S</span>
               </div>
             </div>
             
@@ -91,10 +106,10 @@ const Index = () => {
             >
               <TabsList className="grid w-full grid-cols-2 bg-[#1a3057]">
                 <TabsTrigger value="login" className="text-white data-[state=active]:bg-[#1d6eb7]">
-                  {t.login}
+                  {currentTranslations.login || translations.es.login}
                 </TabsTrigger>
                 <TabsTrigger value="register" className="text-white data-[state=active]:bg-[#1d6eb7]">
-                  {t.register}
+                  {currentTranslations.register || translations.es.register}
                 </TabsTrigger>
               </TabsList>
               
@@ -103,7 +118,7 @@ const Index = () => {
                   <div className="relative">
                     <Input 
                       id="username" 
-                      placeholder={t.username}
+                      placeholder={currentTranslations.username || translations.es.username}
                       className="bg-[#fffbea] border-[#c8b372] pl-8"
                     />
                     <div className="absolute left-2 top-2.5 text-gray-500">
@@ -117,7 +132,7 @@ const Index = () => {
                     <Input 
                       id="password" 
                       type="password" 
-                      placeholder={t.password}
+                      placeholder={currentTranslations.password || translations.es.password}
                       className="bg-[#fffbea] border-[#c8b372] pl-8"
                     />
                     <div className="absolute left-2 top-2.5 text-gray-500">
@@ -127,7 +142,7 @@ const Index = () => {
                   
                   <div className="text-xs text-center">
                     <a href="#" className="text-[#1d6eb7] hover:underline">
-                      {t.forgotPassword}
+                      {currentTranslations.forgotPassword || translations.es.forgotPassword}
                     </a>
                   </div>
                 </div>
@@ -136,7 +151,7 @@ const Index = () => {
                   className="w-full bg-[#1d6eb7] hover:bg-[#165999] text-white border-2 border-[#165999]"
                   onClick={() => navigate('/city')}
                 >
-                  {t.loginButton}
+                  {currentTranslations.loginButton || translations.es.loginButton}
                 </Button>
               </TabsContent>
               
@@ -145,7 +160,7 @@ const Index = () => {
                   <div className="relative">
                     <Input 
                       id="reg-username" 
-                      placeholder={t.username}
+                      placeholder={currentTranslations.username || translations.es.username}
                       className="bg-[#fffbea] border-[#c8b372] pl-8"
                     />
                     <div className="absolute left-2 top-2.5 text-gray-500">
@@ -159,7 +174,7 @@ const Index = () => {
                     <Input 
                       id="reg-email" 
                       type="email" 
-                      placeholder={t.email}
+                      placeholder={currentTranslations.email || translations.es.email}
                       className="bg-[#fffbea] border-[#c8b372] pl-8"
                     />
                     <div className="absolute left-2 top-2.5 text-gray-500">
@@ -173,7 +188,7 @@ const Index = () => {
                     <Input 
                       id="reg-password" 
                       type="password" 
-                      placeholder={t.password}
+                      placeholder={currentTranslations.password || translations.es.password}
                       className="bg-[#fffbea] border-[#c8b372] pl-8"
                     />
                     <div className="absolute left-2 top-2.5 text-gray-500">
@@ -186,7 +201,7 @@ const Index = () => {
                   className="w-full bg-[#1d6eb7] hover:bg-[#165999] text-white border-2 border-[#165999]"
                   onClick={() => navigate('/city')}
                 >
-                  {t.startPlaying}
+                  {currentTranslations.startPlaying || translations.es.startPlaying}
                 </Button>
               </TabsContent>
             </Tabs>
@@ -195,7 +210,7 @@ const Index = () => {
       </div>
 
       <div className="py-2 text-center text-sm text-white relative z-20">
-        Starpolis v1.0.0
+        {currentTranslations.version || translations.es.version} 1.0.0
       </div>
     </div>
   );
