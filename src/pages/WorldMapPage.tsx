@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import ResourceBar from '@/components/ResourceBar';
-import MedievalWorldMap from '@/components/MedievalWorldMap';
+import MedievalWorldMap from '@/components/world-map/MedievalWorldMap';
 import { Island } from '@/types/game';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
