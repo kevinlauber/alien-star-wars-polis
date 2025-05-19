@@ -40,11 +40,13 @@ const Index = () => {
 
   // Update translations whenever language changes
   useEffect(() => {
+    console.log("Language changed to:", language);
     setCurrentTranslations(translations[language]);
   }, [language]);
 
   // Handle language change
   const changeLanguage = (newLang: "es" | "en") => {
+    console.log("Changing language to:", newLang);
     setLanguage(newLang);
   };
 
@@ -81,15 +83,9 @@ const Index = () => {
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center relative z-20">
-        {/* Logo with better visibility */}
+        {/* Logo area - removing the duplicate Starpolis text */}
         <div className="w-full max-w-lg mb-6 relative">
-          <div className="mx-auto w-fit">
-            <img 
-              src="/starpolis-logo.png" 
-              alt="Starpolis" 
-              className="w-64 h-auto filter drop-shadow-lg"
-            />
-          </div>
+          {/* The logo will come from the background image, no need for separate logo */}
         </div>
         
         {/* Login/Register container with medieval style */}

@@ -61,12 +61,11 @@
   .starpolis-bg {
     background-color: #1A1F2C;
     background-image: 
-      url('/starpolis-logo.png'),
       radial-gradient(circle at 25% 10%, rgba(21, 153, 255, 0.1) 0%, transparent 20%),
       radial-gradient(circle at 75% 75%, rgba(155, 135, 245, 0.1) 0%, transparent 20%);
     background-repeat: no-repeat;
-    background-position: center 15%, center, center;
-    background-size: 100% auto, cover, cover;
+    background-position: center, center;
+    background-size: cover, cover;
   }
 
   /* Custom styling for buildings */
@@ -134,53 +133,59 @@
     @apply border-2 border-[#c8b372] rounded-md shadow-md;
   }
 
-  /* 2D game specific styles */
+  /* 2D game specific styles with enhanced depth */
   .object-2d {
     position: relative;
-    transform-style: flat;
+    transform-style: preserve-3d;
     transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   }
 
   .object-2d:hover {
-    transform: scale(1.05);
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
   }
 
   .object-2d::before {
     content: '';
     position: absolute;
-    bottom: -5px;
+    bottom: -8px;
     left: 50%;
-    width: 80%;
-    height: 10px;
-    background: rgba(0,0,0,0.3);
+    width: 90%;
+    height: 15px;
+    background: rgba(0,0,0,0.4);
     border-radius: 50%;
     transform: translateX(-50%);
-    filter: blur(3px);
+    filter: blur(5px);
+    z-index: -1;
   }
 
   .object-shadow {
     position: absolute;
-    bottom: -5px;
+    bottom: -8px;
     left: 50%;
-    width: 80%;
-    height: 10px;
-    background: rgba(0,0,0,0.3);
+    width: 90%;
+    height: 15px;
+    background: rgba(0,0,0,0.4);
     border-radius: 50%;
     transform: translateX(-50%);
-    filter: blur(3px);
+    filter: blur(5px);
+    z-index: -1;
   }
 
-  /* Undiscovered object style */
+  /* Enhanced undiscovered object style */
   .undiscovered {
-    filter: grayscale(1) brightness(0.7);
+    filter: grayscale(1) brightness(0.7) contrast(0.9);
+    opacity: 0.7;
   }
 
-  /* Conquered object style */
+  /* Enhanced conquered object style */
   .conquered {
-    filter: drop-shadow(0 0 5px #3498db);
+    filter: drop-shadow(0 0 8px #3498db);
+    animation: pulse-glow 3s infinite ease-in-out;
   }
 
-  /* 2D terrain tiles */
+  /* 2D terrain tiles with improved visuals */
   .terrain-tile {
     position: relative;
     width: 64px;
@@ -188,6 +193,8 @@
     background-size: cover;
     background-position: center;
     transform: translateZ(0);
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,0,0,0.2);
   }
 
   .terrain-grass {
@@ -202,6 +209,37 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23e6d9a3'/%3E%3Cpath d='M0 0h64v64H0z' fill='%23d0b978' fill-opacity='0.4'/%3E%3Cpath d='M4 4h4v4H4V4zm8 0h4v4h-4V4zm24 0h4v4h-4V4zm8 0h4v4h-4V4zM4 12h4v4H4v-4zm16 0h4v4h-4v-4zm16 0h4v4h-4v-4zm16 0h4v4h-4v-4zM4 20h4v4H4v-4zm32 0h4v4h-4v-4zm16 0h4v4h-4v-4zM4 28h4v4H4v-4zm8 0h4v4h-4v-4zm8 0h4v4h-4v-4zm32 0h4v4h-4v-4zM4 36h4v4H4v-4zm24 0h4v4h-4v-4zm16 0h4v4h-4v-4zm8 0h4v4h-4v-4zM4 44h4v4H4v-4zm8 0h4v4h-4v-4zm24 0h4v4h-4v-4zm16 0h4v4h-4v-4zM4 52h4v4H4v-4zm16 0h4v4h-4v-4zm16 0h4v4h-4v-4zm8 0h4v4h-4v-4z' fill='%23c8b372' fill-opacity='0.4'/%3E%3C/svg%3E");
   }
 
+  /* Alien faction specific styles */
+  .alien-green {
+    filter: hue-rotate(0deg) brightness(1.1);
+  }
+  
+  .alien-orange {
+    filter: hue-rotate(30deg) brightness(1.1);
+  }
+  
+  .alien-blue {
+    filter: hue-rotate(240deg) brightness(1.1);
+  }
+  
+  /* Enhanced 3D shadow effect for buildings */
+  .building-shadow-3d {
+    position: relative;
+  }
+  
+  .building-shadow-3d::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -10px;
+    height: 10px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
+    transform-origin: 0% 0%;
+    transform: skewX(45deg);
+    z-index: -1;
+  }
+  
   /* Animation keyframes */
   @keyframes float {
     0%, 100% {
@@ -214,10 +252,10 @@
 
   @keyframes pulse-glow {
     0%, 100% {
-      opacity: 0.3;
+      filter: drop-shadow(0 0 5px rgba(52, 152, 219, 0.5));
     }
     50% {
-      opacity: 1;
+      filter: drop-shadow(0 0 10px rgba(52, 152, 219, 0.9));
     }
   }
 
@@ -256,11 +294,40 @@
   /* 2D isometric elements */
   .iso-grid {
     transform: rotateX(60deg) rotateZ(45deg);
-    transform-style: flat;
+    transform-style: preserve-3d;
   }
   
   .iso-element {
-    transform-style: flat;
+    transform-style: preserve-3d;
     backface-visibility: hidden;
+  }
+
+  /* Alien characters display fixes */
+  .alien-character-container {
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  
+  .alien-character {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .alien-character-green {
+    object-position: 25% center;
+  }
+  
+  .alien-character-orange {
+    object-position: 50% center;
+  }
+  
+  .alien-character-blue {
+    object-position: 75% center;
+  }
+  
+  .alien-character:hover {
+    transform: scale(1.05);
   }
 }

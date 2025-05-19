@@ -51,46 +51,66 @@ const IslandElement: React.FC<IslandElementProps> = ({ island, onClick }) => {
         </div>
       )}
       
-      {/* Add 3D effect with pseudo-elements */}
+      {/* Enhanced 3D effect with pseudo-elements */}
       <div className="w-full h-full relative">
-        {/* Island base */}
+        {/* Island shadow for depth */}
         <div 
-          className="absolute inset-0 rounded-full"
+          className="absolute -bottom-4 left-1/2 w-4/5 h-1/6 bg-black opacity-40 rounded-full blur-sm transform -translate-x-1/2"
+        ></div>
+        
+        {/* Island base layer */}
+        <div 
+          className="absolute inset-0 rounded-full transform translate-y-[10%]"
           style={{
             backgroundColor: island.isOwn ? '#34495e' : 
                             island.ownerName ? '#7f1d1d' :
                             island.isDestroyed ? '#1e1e1e' : '#2c3e50',
-            transform: 'translateY(20%)',
             zIndex: 1
           }}
         ></div>
         
-        {/* Island top */}
+        {/* Island middle layer for 3D effect */}
         <div 
-          className="absolute inset-0 rounded-full flex items-center justify-center"
+          className="absolute inset-0 rounded-full transform translate-y-[5%] scale-95"
+          style={{
+            backgroundColor: island.isOwn ? '#2980b9' : 
+                            island.ownerName ? '#c0392b' :
+                            island.isDestroyed ? '#596672' : '#7f8c8d',
+            zIndex: 2
+          }}
+        ></div>
+        
+        {/* Island top layer */}
+        <div 
+          className="absolute inset-0 rounded-full flex items-center justify-center transform translate-y-[0%] scale-90"
           style={{
             backgroundColor: island.isOwn ? '#3498db' : 
                             island.ownerName ? '#e74c3c' :
                             island.isDestroyed ? '#7f8c8d' : '#95a5a6',
-            transform: 'translateY(-5%)',
-            zIndex: 2,
+            zIndex: 3,
             overflow: 'hidden'
           }}
         >
-          {/* Inner details */}
+          {/* Inner details for texture */}
           {!island.isDestroyed && (
             <>
               <div className="w-2/3 h-2/3 rounded-full bg-current opacity-20"></div>
               <div className="absolute top-1/4 left-1/4 w-1/4 h-1/4 rounded-full bg-white opacity-30"></div>
+              {island.isOwn && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-white text-xs font-bold z-10 bg-black bg-opacity-20 px-1 rounded">
+                    {island.health}%
+                  </div>
+                </div>
+              )}
             </>
           )}
-          
-          {island.isOwn && (
-            <div className="text-white text-xs font-bold z-10">
-              {island.health}%
-            </div>
-          )}
         </div>
+        
+        {/* Island highlight for better 3D effect */}
+        <div 
+          className="absolute top-[10%] left-[10%] w-[30%] h-[20%] rounded-full bg-white opacity-30 z-4"
+        ></div>
       </div>
     </div>
   );

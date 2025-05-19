@@ -9,9 +9,12 @@ interface IslandContainerProps {
 }
 
 const IslandContainer: React.FC<IslandContainerProps> = ({ islands, onIslandClick }) => {
+  // Sort islands by position.y to ensure proper layering
+  const sortedIslands = [...islands].sort((a, b) => a.position.y - b.position.y);
+  
   return (
     <>
-      {islands.map((island) => (
+      {sortedIslands.map((island) => (
         <IslandElement 
           key={island.id}
           island={island} 
