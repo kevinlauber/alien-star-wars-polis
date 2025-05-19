@@ -8,6 +8,8 @@ export interface LocalObject {
   position: { x: number; y: number };
   discovered: boolean;
   conquered: boolean;
+  name: string;
+  description: string;
 }
 
 interface LocalMapObjectProps {
@@ -107,7 +109,7 @@ const LocalMapObject: React.FC<LocalMapObjectProps> = ({ object, onClick }) => {
           transition: 'opacity 0.3s ease'
         }}
       >
-        {object.type}
+        {object.name || object.type}
       </div>
     </div>
   );
